@@ -1,11 +1,17 @@
 import './index.scss'
 import { Card, Form, Input, Button } from 'antd'
 import logo from '@/assets/logo.png'
+import { fetchLogin } from '@/store/modules/user'
+import { useDispatch } from 'react-redux'
 
+// 发送表单数据 获取token
 const Login = () => {
+  const dispatch = useDispatch()
   const onFinish = values => {
     console.log(values)
+    dispatch(fetchLogin(values))
   }
+
   return (
     <div className="login">
       <Card className="login-container">
@@ -14,7 +20,7 @@ const Login = () => {
         <Form onFinish={onFinish}>
           <Form.Item
             validateTrigger="onBlur"
-            name="username"
+            name="mobile"
             rules={[
               {
                 required: true,
@@ -30,7 +36,7 @@ const Login = () => {
           </Form.Item>
           <Form.Item
             validateTrigger="onBlur"
-            name="password"
+            name="code"
             rules={[
               {
                 required: true,

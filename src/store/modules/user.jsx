@@ -1,4 +1,5 @@
 import { createSlice } from '@reduxjs/toolkit'
+import { request } from '@/utils'
 const userStore = createSlice({
   name: 'user',
   initialState: {
@@ -12,6 +13,14 @@ const userStore = createSlice({
 })
 
 const { setToken } = userStore.actions
-export { setToken }
+
+const fetchLogin = loginValues => {
+  return async dispatch => {
+    const res = await request.post('/authorizations', loginValues)
+    dispatch(setToken(res.data.token))
+  }
+}
+
+export { setToken, fetchLogin }
 const userReducer = userStore.reducer
 export default userReducer

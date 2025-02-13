@@ -9,3 +9,4 @@ const AuthRouter = ({ children }) => {
     return <Navigate to="/login" replace />
   }
 }
+export default AuthRouter

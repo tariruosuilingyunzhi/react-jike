@@ -11,6 +11,10 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  const stuts = {
+    1: <Tag color="blue">待审核</Tag>,
+    2: <Tag color="green">审核通过</Tag>,
+  }
   const columns = [
     {
       title: '封面',
@@ -28,7 +32,9 @@ const Article = () => {
     {
       title: '状态',
       dataIndex: 'status',
-      render: data => <Tag color="green">审核通过</Tag>,
+      render: data => stuts[data],
+
+      // == 1 ? <Tag color="blue">待审核</Tag> : <Tag color="green">审核通过</Tag>,
     },
     {
       title: '发布时间',
@@ -67,9 +73,11 @@ const Article = () => {
       const res = await GetArticleListApi()
       setCount(res.data.total_count)
       setArticleList(res.data.results)
+      console.log(res)
     }
     getArticleList()
   }, [])
+
   return (
     <div>
       <Card

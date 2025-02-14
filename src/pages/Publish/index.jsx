@@ -15,7 +15,6 @@ const Publish = () => {
     // 获取频道列表
     const GetChannelList = async () => {
       const res = await GetChannelApi()
-      // console.log(res.data.channels)
       setChannelList(res.data.channels)
     }
     GetChannelList()
@@ -24,25 +23,25 @@ const Publish = () => {
   // 收集表单数据 提交数据
   const onFinish = async formValues => {
     const { title, content, channel_id } = formValues
-    // console.log(formValues)
+    if (imageList.length !== imageType) return message.error('请上传正确数量的图片')
     const data = {
       title,
       content,
       cover: {
-        type: 0,
-        images: [],
+        type: imageType,
+        images: imageList.map(item => item.response.data.url),
       },
       channel_id,
     }
     await AddArticleApi(data)
     message.success('发布成功')
-    // console.log(res)
   }
 
   // 上传图片
   const [imageList, setImageList] = useState([])
   const onChange = value => {
     setImageList(value.fileList)
+    console.log(imageList)
   }
 
   // 切换封面类型

@@ -1,11 +1,11 @@
-import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import { Link } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
-import { GetChannelApi } from '@/apis/article'
+import { GetChannelApi, AddArticleApi } from '@/apis/article'
 
 const { Option } = Select
 
@@ -20,10 +20,28 @@ const Publish = () => {
     }
     GetChannelList()
   }, [])
+
+  // 收集表单数据 提交数据
+  const onFinish = async formValues => {
+    const { title, content, channel_id } = formValues
+    console.log(formValues)
+    const data = {
+      title,
+      content,
+      cover: {
+        type: 0,
+        images: [],
+      },
+      channel_id,
+    }
+    const res = await AddArticleApi(data)
+    message.success('发布成功')
+    console.log(res)
+  }
   return (
     <div className="publish">
       <Card title={<Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: '发布文章' }]} />}>
-        <Form labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ type: 1 }}>
+        <Form onFinish={onFinish} labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ type: 1 }}>
           <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入文章标题' }]}>
             <Input placeholder="请输入文章标题" style={{ width: 400 }} />
           </Form.Item>

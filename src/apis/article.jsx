@@ -7,4 +7,11 @@ const GetChannelApi = () => {
   })
 }
 
-export { GetChannelApi }
+const AddArticleApi = data => {
+  return request({
+    url: '/mp/articles?draft=false',
+    method: 'POST',
+    data,
+  })
+}
+export { GetChannelApi, AddArticleApi }

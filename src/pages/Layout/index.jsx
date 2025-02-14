@@ -1,8 +1,9 @@
 import { Layout, Menu, Popconfirm } from 'antd'
 import { HomeOutlined, DiffOutlined, EditOutlined, LogoutOutlined } from '@ant-design/icons'
-import { Outlet } from 'react-router-dom'
-import { useNavigate } from 'react-router-dom'
+import { Outlet, useNavigate, useLocation } from 'react-router-dom'
+
 import './index.scss'
+import { useEffect, useState } from 'react'
 
 const { Header, Sider } = Layout
 
@@ -30,6 +31,11 @@ const GeekLayout = () => {
     const path = e.key
     navigate(path)
   }
+
+  // 在页面刚刷新时，获取当前的路由，并设置当前的路由的选中状态
+  const route = useLocation()
+  const [router_key, setRouterKey] = useState(route.pathname)
+
   return (
     <Layout>
       <Header className="header">
@@ -49,7 +55,7 @@ const GeekLayout = () => {
             onClick={e => routerChange(e)}
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={['1']}
+            defaultSelectedKeys={[router_key]}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
           ></Menu>

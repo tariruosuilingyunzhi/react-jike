@@ -1,6 +1,6 @@
 import axios from 'axios'
-import { getToken } from '.'
-
+import { getToken, removeToken } from '.'
+import { useNavigate } from 'react-router-dom'
 const request = axios.create({
   baseURL: 'http://geek.itheima.net/v1_0',
   timeout: 5000,
@@ -35,6 +35,13 @@ request.interceptors.response.use(
   error => {
     // 超出 2xx 范围的状态码都会触发该函数。
     // 对响应错误做点什么
+    console.dir(error)
+    if (error.response.status === 401) {
+      removeToken()
+      window.location.reload()
+      // const navigate = useNavigate()
+      // navigate('/login')
+    }
     return Promise.reject(error)
   }
 )

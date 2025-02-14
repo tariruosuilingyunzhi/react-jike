@@ -4,10 +4,22 @@ import { Link } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
+import { useEffect, useState } from 'react'
+import { GetChannelApi } from '@/apis/article'
 
 const { Option } = Select
 
 const Publish = () => {
+  const [channelList, setChannelList] = useState([])
+  useEffect(() => {
+    // 获取频道列表
+    const GetChannelList = async () => {
+      const res = await GetChannelApi()
+      console.log(res.data.channels)
+      setChannelList(res.data.channels)
+    }
+    GetChannelList()
+  }, [])
   return (
     <div className="publish">
       <Card title={<Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: '发布文章' }]} />}>
@@ -17,7 +29,11 @@ const Publish = () => {
           </Form.Item>
           <Form.Item label="频道" name="channel_id" rules={[{ required: true, message: '请选择文章频道' }]}>
             <Select placeholder="请选择文章频道" style={{ width: 400 }}>
-              <Option value={0}>推荐</Option>
+              {channelList.map(item => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
           <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}>

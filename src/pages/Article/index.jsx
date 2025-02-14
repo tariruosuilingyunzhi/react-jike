@@ -4,7 +4,9 @@ import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
-
+import { useGetChannel } from '@/hooks/useGetChannel'
+import { GetArticleListApi } from '@/apis/article'
+import { useEffect, useState } from 'react'
 const { Option } = Select
 const { RangePicker } = DatePicker
 
@@ -56,21 +58,18 @@ const Article = () => {
       },
     },
   ]
-  // 准备表格body数据
-  const data = [
-    {
-      id: '8218',
-      comment_count: 0,
-      cover: {
-        images: [],
-      },
-      like_count: 0,
-      pubdate: '2019-03-11 09:00:00',
-      read_count: 2,
-      status: 2,
-      title: 'wkwebview离线化加载h5资源解决方案',
-    },
-  ]
+
+  const { channelList } = useGetChannel()
+  const [articleList, setArticleList] = useState([])
+  const [count, setCount] = useState(0)
+  useEffect(() => {
+    const getArticleList = async () => {
+      const res = await GetArticleListApi()
+      setCount(res.data.total_count)
+      setArticleList(res.data.results)
+    }
+    getArticleList()
+  }, [])
   return (
     <div>
       <Card
@@ -87,9 +86,12 @@ const Article = () => {
           </Form.Item>
 
           <Form.Item label="频道" name="channel_id">
-            <Select placeholder="请选择文章频道" defaultValue="lucy" style={{ width: 120 }}>
-              <Option value="jack">Jack</Option>
-              <Option value="lucy">Lucy</Option>
+            <Select placeholder="请选择文章频道" style={{ width: 120 }}>
+              {channelList.map(item => (
+                <Option key={item.id} value={item.id}>
+                  {item.name}
+                </Option>
+              ))}
             </Select>
           </Form.Item>
 
@@ -105,8 +107,8 @@ const Article = () => {
           </Form.Item>
         </Form>
       </Card>
-      <Card title={`根据筛选条件共查询到 count 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={data} />
+      <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
+        <Table rowKey="id" columns={columns} dataSource={articleList} />
       </Card>
     </div>
   )

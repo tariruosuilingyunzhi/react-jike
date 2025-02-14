@@ -14,4 +14,13 @@ const AddArticleApi = data => {
     data,
   })
 }
-export { GetChannelApi, AddArticleApi }
+// 获取文章列表
+const GetArticleListApi = params => {
+  return request({
+    url: '/mp/articles',
+    method: 'GET',
+    params,
+  })
+}
+
+export { GetChannelApi, AddArticleApi, GetArticleListApi }

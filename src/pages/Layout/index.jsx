@@ -68,7 +68,7 @@ const GeekLayout = () => {
             onClick={e => routerChange(e)}
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={[router_key]}
+            defaultSelectedKeys={router_key}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
           ></Menu>

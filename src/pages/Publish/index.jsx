@@ -15,7 +15,7 @@ const Publish = () => {
     // 获取频道列表
     const GetChannelList = async () => {
       const res = await GetChannelApi()
-      console.log(res.data.channels)
+      // console.log(res.data.channels)
       setChannelList(res.data.channels)
     }
     GetChannelList()
@@ -24,7 +24,7 @@ const Publish = () => {
   // 收集表单数据 提交数据
   const onFinish = async formValues => {
     const { title, content, channel_id } = formValues
-    console.log(formValues)
+    // console.log(formValues)
     const data = {
       title,
       content,
@@ -34,9 +34,15 @@ const Publish = () => {
       },
       channel_id,
     }
-    const res = await AddArticleApi(data)
+    await AddArticleApi(data)
     message.success('发布成功')
-    console.log(res)
+    // console.log(res)
+  }
+
+  // 上传图片
+  const [imageList, setImageList] = useState([])
+  const onChange = value => {
+    setImageList(value.fileList)
   }
   return (
     <div className="publish">
@@ -53,6 +59,26 @@ const Publish = () => {
                 </Option>
               ))}
             </Select>
+          </Form.Item>
+          <Form.Item label="封面">
+            <Form.Item name="type">
+              <Radio.Group>
+                <Radio value={1}>单图</Radio>
+                <Radio value={3}>三图</Radio>
+                <Radio value={0}>无图</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Upload
+              onChange={onChange}
+              name="image"
+              action={'http://geek.itheima.net/v1_0/upload'}
+              listType="picture-card"
+              showUploadList
+            >
+              <div style={{ marginTop: 8 }}>
+                <PlusOutlined />
+              </div>
+            </Upload>
           </Form.Item>
           <Form.Item label="内容" name="content" rules={[{ required: true, message: '请输入文章内容' }]}>
             <ReactQuill className="publish-quill" theme="snow" placeholder="请输入文章内容" />

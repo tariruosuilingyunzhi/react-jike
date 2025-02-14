@@ -77,6 +77,7 @@ const Publish = () => {
             </Form.Item>
             {imageType !== 0 && (
               <Upload
+                maxCount={imageType}
                 onChange={onChange}
                 name="image"
                 action={'http://geek.itheima.net/v1_0/upload'}

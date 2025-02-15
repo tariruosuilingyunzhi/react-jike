@@ -27,15 +27,15 @@ const items = [
 ]
 
 const GeekLayout = () => {
+  // 在页面刚刷新时，获取当前的路由，并设置当前的路由的选中状态
+  const route = useLocation()
+  const router_key = route.pathname
   const navigate = useNavigate()
   const routerChange = e => {
     const path = e.key
+
     navigate(path)
   }
-
-  // 在页面刚刷新时，获取当前的路由，并设置当前的路由的选中状态
-  const route = useLocation()
-  const [router_key, setRouterKey] = useState(route.pathname)
 
   // 获取用户信息
   const dispatch = useDispatch()
@@ -69,7 +69,7 @@ const GeekLayout = () => {
             onClick={e => routerChange(e)}
             mode="inline"
             theme="dark"
-            defaultSelectedKeys={router_key}
+            selectedKeys={router_key}
             items={items}
             style={{ height: '100%', borderRight: 0 }}
           ></Menu>

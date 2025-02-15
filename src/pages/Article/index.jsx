@@ -1,4 +1,4 @@
-import { Link } from 'react-router-dom'
+import { Link, useNavigate } from 'react-router-dom'
 import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm, message } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
@@ -11,6 +11,7 @@ const { Option } = Select
 const { RangePicker } = DatePicker
 
 const Article = () => {
+  const navigate = useNavigate()
   const stuts = {
     1: <Tag color="blue">待审核</Tag>,
     2: <Tag color="green">审核通过</Tag>,
@@ -57,7 +58,7 @@ const Article = () => {
       render: data => {
         return (
           <Space size="middle">
-            <Button type="primary" shape="circle" icon={<EditOutlined />} />
+            <Button onClick={() => editor(data)} type="primary" shape="circle" icon={<EditOutlined />} />
             <Popconfirm
               title="温馨提示"
               description="确定要删除该文章吗?"
@@ -91,14 +92,15 @@ const Article = () => {
       const res = await GetArticleListApi(params)
       setCount(res.data.total_count)
       setArticleList(res.data.results)
-      console.log(res)
+      // console.log(res)
     }
     getArticleList()
   }, [params])
 
   // 获取表单数据
   const onFinish = values => {
-    console.log(values)
+    // console.log(values)
+
     const { status, channel_id, date } = values
     const beginDate = date[0].format('YYYY-MM-DD')
     const endDate = date[1].format('YYYY-MM-DD')
@@ -111,18 +113,21 @@ const Article = () => {
     })
   }
   const onChange = page => {
-    console.log(page)
+    // console.log(page)
     setParams({ ...params, page: page.current, per_page: page.pageSize })
   }
 
   // 确认删除
   const confirm = async value => {
-    console.log(value)
+    // console.log(value)
     await DeleteArticleApi(value.id)
     message.success('删除成功')
     setParams({ ...params })
   }
 
+  const editor = data => {
+    navigate(`/publish?id=${data.id}`)
+  }
   return (
     <div>
       <Card

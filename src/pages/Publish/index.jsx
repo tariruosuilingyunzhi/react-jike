@@ -1,6 +1,6 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link } from 'react-router-dom'
+import { Link, useParams } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
@@ -41,6 +41,13 @@ const Publish = () => {
   const onTypeChange = e => {
     setImageType(e.target.value)
   }
+
+  // 表单数据回显
+  // const params = useParams()
+  // if (params) {
+  //   const articleId = params.get('id')
+  //   console.log(articleId)
+  // }
 
   return (
     <div className="publish">

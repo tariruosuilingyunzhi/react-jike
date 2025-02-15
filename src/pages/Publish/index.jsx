@@ -51,8 +51,21 @@ const Publish = () => {
     async function getArticleDetails() {
       const res = await GetArticleDetailApi(articleId)
       message.success('获取文章详情成功')
-      console.log(res)
-      form.setFieldsValue(res.data)
+
+      const data = res.data
+      const { cover } = data
+      console.log(data)
+      console.log(cover.type)
+      setImageType(cover.type)
+      form.setFieldsValue({
+        ...data,
+        type: cover.type,
+      })
+      setImageList(
+        cover.images.map(url => {
+          return { url }
+        })
+      )
     }
     getArticleDetails()
   }, [articleId, form])
@@ -81,14 +94,24 @@ const Publish = () => {
           </Form.Item>
           <Form.Item label="封面">
             <Form.Item name="type">
-              <Radio.Group onChange={onTypeChange}>
+              <Radio.Group
+                value={imageType}
+                onChange={onTypeChange}
+                options={[
+                  { value: 1, label: '单图' },
+                  { value: 3, label: '三图' },
+                  { value: 0, label: '无图' },
+                ]}
+              />
+              {/* <Radio.Group value={imageType} onChange={onTypeChange}>
                 <Radio value={1}>单图</Radio>
                 <Radio value={3}>三图</Radio>
                 <Radio value={0}>无图</Radio>
-              </Radio.Group>
+              </Radio.Group> */}
             </Form.Item>
             {imageType !== 0 && (
               <Upload
+                fileList={imageList}
                 maxCount={imageType}
                 onChange={onChange}
                 name="image"

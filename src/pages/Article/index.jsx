@@ -65,18 +65,41 @@ const Article = () => {
     },
   ]
 
+  const [params, setParams] = useState({
+    status: '',
+    channel_id: '',
+    begin_pubdate: '',
+    end_pubdate: '',
+    page: 1,
+    per_page: 10,
+  })
+
   const { channelList } = useGetChannel()
   const [articleList, setArticleList] = useState([])
   const [count, setCount] = useState(0)
   useEffect(() => {
     const getArticleList = async () => {
-      const res = await GetArticleListApi()
+      const res = await GetArticleListApi(params)
       setCount(res.data.total_count)
       setArticleList(res.data.results)
       console.log(res)
     }
     getArticleList()
-  }, [])
+  }, [params])
+
+  // 获取表单数据
+  const onFinish = values => {
+    console.log(values)
+    const { status, channel_id, date } = values
+    const beginDate = date[0].format('YYYY-MM-DD')
+    const endDate = date[1].format('YYYY-MM-DD')
+    setParams({
+      status: status,
+      channel_id: channel_id,
+      begin_pubdate: beginDate,
+      end_pubdate: endDate,
+    })
+  }
 
   return (
     <div>
@@ -84,7 +107,7 @@ const Article = () => {
         title={<Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: '文章列表' }]} />}
         style={{ marginBottom: 20 }}
       >
-        <Form initialValues={{ status: '' }}>
+        <Form onFinish={onFinish} initialValues={{ status: '' }}>
           <Form.Item label="状态" name="status">
             <Radio.Group>
               <Radio value={''}>全部</Radio>

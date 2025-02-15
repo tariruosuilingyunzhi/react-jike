@@ -22,5 +22,7 @@ const GetArticleListApi = params => {
     params,
   })
 }
-
-export { GetChannelApi, AddArticleApi, GetArticleListApi }
+const DeleteArticleApi = id => {
+  return request.delete(`/mp/articles/${id}`)
+}
+export { GetChannelApi, AddArticleApi, GetArticleListApi, DeleteArticleApi }

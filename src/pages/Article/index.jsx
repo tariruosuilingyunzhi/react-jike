@@ -1,11 +1,11 @@
 import { Link } from 'react-router-dom'
-import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select } from 'antd'
+import { Card, Breadcrumb, Form, Button, Radio, DatePicker, Select, Popconfirm, message } from 'antd'
 import locale from 'antd/es/date-picker/locale/zh_CN'
 import { Table, Tag, Space } from 'antd'
 import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import img404 from '@/assets/error.png'
 import { useGetChannel } from '@/hooks/useGetChannel'
-import { GetArticleListApi } from '@/apis/article'
+import { GetArticleListApi, DeleteArticleApi } from '@/apis/article'
 import { useEffect, useState } from 'react'
 const { Option } = Select
 const { RangePicker } = DatePicker
@@ -58,7 +58,16 @@ const Article = () => {
         return (
           <Space size="middle">
             <Button type="primary" shape="circle" icon={<EditOutlined />} />
-            <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
+            <Popconfirm
+              title="温馨提示"
+              description="确定要删除该文章吗?"
+              onConfirm={() => confirm(data)}
+              // onCancel={cancel}
+              okText="确定"
+              cancelText="取消"
+            >
+              <Button type="primary" danger shape="circle" icon={<DeleteOutlined />} />
+            </Popconfirm>
           </Space>
         )
       },
@@ -105,6 +114,15 @@ const Article = () => {
     console.log(page)
     setParams({ ...params, page: page.current, per_page: page.pageSize })
   }
+
+  // 确认删除
+  const confirm = async value => {
+    console.log(value)
+    await DeleteArticleApi(value.id)
+    message.success('删除成功')
+    setParams({ ...params })
+  }
+
   return (
     <div>
       <Card

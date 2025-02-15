@@ -5,7 +5,7 @@ import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
 import { useEffect, useState } from 'react'
-import { AddArticleApi, GetArticleDetailApi } from '@/apis/article'
+import { AddArticleApi, GetArticleDetailApi, UpdateArticleApi } from '@/apis/article'
 import { useGetChannel } from '@/hooks/useGetChannel'
 const { Option } = Select
 
@@ -21,12 +21,23 @@ const Publish = () => {
       content,
       cover: {
         type: imageType,
-        images: imageList.map(item => item.response.data.url),
+        images: imageList.map(item => {
+          if (item.response) {
+            return item.response.data.url
+          } else {
+            return item.url
+          }
+        }),
       },
       channel_id,
     }
-    await AddArticleApi(data)
-    message.success('发布成功')
+    if (articleId) {
+      await UpdateArticleApi(articleId, data)
+      message.success('更新成功')
+    } else {
+      await AddArticleApi(data)
+      message.success('发布成功')
+    }
   }
 
   // 上传图片
@@ -50,7 +61,6 @@ const Publish = () => {
   useEffect(() => {
     async function getArticleDetails() {
       const res = await GetArticleDetailApi(articleId)
-      message.success('获取文章详情成功')
 
       const data = res.data
       const { cover } = data
@@ -67,12 +77,18 @@ const Publish = () => {
         })
       )
     }
-    getArticleDetails()
+    if (articleId) {
+      getArticleDetails()
+    }
   }, [articleId, form])
 
   return (
     <div className="publish">
-      <Card title={<Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: '发布文章' }]} />}>
+      <Card
+        title={
+          <Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: articleId ? '编辑文章' : '发布文章' }]} />
+        }
+      >
         <Form
           form={form}
           onFinish={onFinish}

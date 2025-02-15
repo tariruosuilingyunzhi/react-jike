@@ -1,11 +1,11 @@
 import { Card, Breadcrumb, Form, Button, Radio, Input, Upload, Space, Select, message } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
-import { Link, useParams } from 'react-router-dom'
+import { Link, useSearchParams } from 'react-router-dom'
 import './index.scss'
 import ReactQuill from 'react-quill'
 import 'react-quill/dist/quill.snow.css'
-import { useState } from 'react'
-import { AddArticleApi } from '@/apis/article'
+import { useEffect, useState } from 'react'
+import { AddArticleApi, GetArticleDetailApi } from '@/apis/article'
 import { useGetChannel } from '@/hooks/useGetChannel'
 const { Option } = Select
 
@@ -41,18 +41,32 @@ const Publish = () => {
   const onTypeChange = e => {
     setImageType(e.target.value)
   }
+  const [searchParams] = useSearchParams()
+  const articleId = searchParams.get('id')
 
+  // 获取表单实例 调用form的设置表单数据方法
+  const [form] = Form.useForm()
   // 表单数据回显
-  // const params = useParams()
-  // if (params) {
-  //   const articleId = params.get('id')
-  //   console.log(articleId)
-  // }
+  useEffect(() => {
+    async function getArticleDetails() {
+      const res = await GetArticleDetailApi(articleId)
+      message.success('获取文章详情成功')
+      console.log(res)
+      form.setFieldsValue(res.data)
+    }
+    getArticleDetails()
+  }, [articleId, form])
 
   return (
     <div className="publish">
       <Card title={<Breadcrumb items={[{ title: <Link to={'/'}>首页</Link> }, { title: '发布文章' }]} />}>
-        <Form onFinish={onFinish} labelCol={{ span: 4 }} wrapperCol={{ span: 16 }} initialValues={{ type: 0 }}>
+        <Form
+          form={form}
+          onFinish={onFinish}
+          labelCol={{ span: 4 }}
+          wrapperCol={{ span: 16 }}
+          initialValues={{ type: 0 }}
+        >
           <Form.Item label="标题" name="title" rules={[{ required: true, message: '请输入文章标题' }]}>
             <Input placeholder="请输入文章标题" style={{ width: 400 }} />
           </Form.Item>

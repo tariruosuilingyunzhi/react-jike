@@ -25,4 +25,11 @@ const GetArticleListApi = params => {
 const DeleteArticleApi = id => {
   return request.delete(`/mp/articles/${id}`)
 }
-export { GetChannelApi, AddArticleApi, GetArticleListApi, DeleteArticleApi }
+
+const GetArticleDetailApi = id => {
+  return request({
+    url: `/mp/articles/${id}`,
+    method: 'GET',
+  })
+}
+export { GetChannelApi, AddArticleApi, GetArticleListApi, DeleteArticleApi, GetArticleDetailApi }

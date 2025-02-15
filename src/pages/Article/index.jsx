@@ -71,7 +71,7 @@ const Article = () => {
     begin_pubdate: '',
     end_pubdate: '',
     page: 1,
-    per_page: 10,
+    per_page: 8,
   })
 
   const { channelList } = useGetChannel()
@@ -94,13 +94,17 @@ const Article = () => {
     const beginDate = date[0].format('YYYY-MM-DD')
     const endDate = date[1].format('YYYY-MM-DD')
     setParams({
+      ...params,
       status: status,
       channel_id: channel_id,
       begin_pubdate: beginDate,
       end_pubdate: endDate,
     })
   }
-
+  const onChange = page => {
+    console.log(page)
+    setParams({ ...params, page: page.current, per_page: page.pageSize })
+  }
   return (
     <div>
       <Card
@@ -139,7 +143,13 @@ const Article = () => {
         </Form>
       </Card>
       <Card title={`根据筛选条件共查询到 ${count} 条结果：`}>
-        <Table rowKey="id" columns={columns} dataSource={articleList} />
+        <Table
+          onChange={onChange}
+          pagination={{ total: count, pageSize: params.per_page, pageSizeOptions: [4, 8, 10] }}
+          rowKey="id"
+          columns={columns}
+          dataSource={articleList}
+        />
       </Card>
     </div>
   )
